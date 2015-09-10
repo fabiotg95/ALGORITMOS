@@ -1,0 +1,235 @@
+#include "stdafx.h"
+#include "conio.h"
+#include <iostream>
+#include <string>
+#include "math.h"
+#include "stdlib.h"
+
+
+#define TAM 50
+
+using namespace std;
+
+void cargar_vector(int A[], int n);
+void cargar_vectors(string nombre[], int n);
+void mostrar_vector(int A[], int n);
+void ordenar_vector(int A[], int n);
+int  busqueda_binaria(int A[], int n, int z);
+void arrays_paralelos(string nombre[], int nota[], int n);
+void mostrar_paralelos(string nombre[], int nota[], int n);
+void clasificacion_insercion(float A[], int n);
+void lee_cadena(int n, int A[]);
+void insercion_directa(int A[], int n);
+void muestra_cadena(int n, int A[]);
+
+void main()
+{
+	int op, n, sol, a ,b, z, clave, arreglo, A[TAM];
+   
+	string nombre[TAM];
+	
+	do
+	{
+		cout<<"1.-CARGAR VECTOR ENTERO"<<endl;
+		cout<<"2.-CARGAR VECTOR STRING"<<endl;
+		cout<<"3.-MOSTRAR VECTOR ENTERO"<<endl;
+		cout<<"4.-CLASIFICAR VECTOR PARALELO"<<endl;
+		cout<<"5.-MOSTRAR VECTOR PARALELO"<<endl;
+		cout<<"6.-BUSQUEDA BINARIA"<<endl;
+		cout<<"7.-CLASIFICACION POR INSERCION"<<endl;
+		cout<<"0.-SALIR"<<endl;
+
+		cin>>op;
+
+		switch(op)
+		{
+		  case 1: do{
+					
+					        cout<<"ingrese el numero de elementos:";
+					        cin>>n;
+				       }
+				       while ((n>TAM) || (n<0));
+				       cargar_vector (A, n);
+				       break;
+
+		  case 2: do{
+					  
+			                cout<<"ingrese el numero de elementos:";
+					        cin>>n;
+				       
+				       }
+				       while((n>TAM) || (n<0));
+				       cargar_vectors(nombre, n);
+				       break;
+
+		   case 3:
+			      
+			      mostrar_vector(A, n);
+				  break;
+
+		   case 4:
+			     
+			      arrays_paralelos(nombre, A, n);
+				  break;
+
+		   case 5:
+			      
+			      mostrar_paralelos(nombre, A, n);
+				  break;
+		   case 6:
+			     
+                 cout<<"elemento a buscar";
+				 cin>>clave;
+				 z=busqueda_binaria(A, n, clave);
+				 if (z==-1)
+					 cout<<"el elemento no existe"<<endl;
+				 else
+					 cout<<"el dato esta en la posicion:"<<z<<"\t"<<A[z];
+				 break;		  
+		   
+		   case 7:do{
+
+                      
+			            cout<<"Cantidad de numeros a ingresar: ";cin>>n;
+                            if(n<=0||n>TAM)
+                        cout<<"Debe ingresar un valor  > a 0 y < a "<<TAM<<endl;
+                       }
+				  
+				       while(n<=0||n>TAM);
+                       lee_cadena(n,A);
+                       insercion_directa(A,n);
+                       muestra_cadena(n,A);
+				       break;
+
+		   case 0:
+			    
+			     cout<<"FIN DEL PROGRAMA";
+				 break;
+
+		   default:
+
+			      cout<<"OPCION INVALIDA";
+				  break;
+		}
+		getch();
+		system("cls");
+	}while (op!=0);
+}
+
+		  
+
+
+			    
+			       
+void cargar_vector(int A[], int n)
+{
+	for (int i=0; i<n; i++)
+	{
+		cout<<"A["<<i<<"] = ";
+		cin>>A[i];
+	}
+}
+
+void cargar_vectors(string nombre[], int n)
+{
+	cin.ignore();
+	for (int i=0; i<n; i++)
+	{
+		cout<<"nombre["<<i<<"] = ";
+		getline(cin, nombre[i]);
+	}
+}
+
+void mostrar_vector(int A[], int n)
+{
+	for (int i=0; i<n; i++)
+	{
+		cout<<"A["<<i<<"] = "<<A[i]<<endl;
+	}
+}
+
+void arrays_paralelos(string nombre[], int nota[], int n)
+{
+	int aux;
+	string auxs;
+	for (int i=0; i< n-1; i++)
+		for (int j=i+1; j<n; j++)
+			if (nombre[i] > nombre[j])
+			{
+				aux=nota[j];
+				nota[j]=nota[i];
+				nota[i]=aux;
+				auxs=nombre[j];
+				nombre[j]=nombre[i];
+				nombre[i]=auxs;
+
+			}
+}
+
+void mostrar_paralelos(string nombre[], int nota[], int n)
+{
+	cout<<"No. \t Nombre y Apellido \t Nota"<<endl;
+	cout<<"ªªªªªªªªªªªªªªªªªªªªªªªªªªªºªªªªªºªªªªªªªªªªª"<<endl;
+	for (int i=0; i<n; i++)
+		cout<<i+1<<" "<<nombre[i]<<"\t"<<nota[i]<<endl;
+}
+
+
+int busqueda_binaria(int A[], int n, int k)
+{
+  int fin = n-1,ini = 0,medio;
+  while (ini <= fin)
+    {
+      medio = (fin + ini)/2;
+      if (A[medio] == k)
+         return medio;
+      else
+         if (k < A[medio])
+            fin=medio-1;
+         else
+            ini=medio+1;
+    }
+  return -1;
+}
+
+
+void lee_cadena(int n,int A[])
+{
+    int i;
+    for(i=0;i<n;i++)
+    {
+        cout<<"Ingresa numero "<<i+1<<": ";
+        cin>>A[i];
+    }
+     
+}
+
+
+void insercion_directa(int A[],int n)
+{
+ 
+      int i,j,v;
+ 
+      for (i=1;i<n;i++)
+        {
+             v=A[i];
+             j=i-1;
+             while (j>=0&&A[j]>v)
+             {
+                  A[j+1]=A[j];
+                  j--;
+             }
+             
+             A[j+1]=v;
+        }   
+}
+  
+ 
+void muestra_cadena(int n,int A[])
+{
+    int i;
+    for(i=0;i<n;i++)
+    {
+        cout<<A[i]<<endl;
+    }
+}
