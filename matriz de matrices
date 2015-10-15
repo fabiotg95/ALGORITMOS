@@ -1,0 +1,70 @@
+#include "stdafx.h"
+#include "conio.h"
+#include <iostream>
+#define fil 20
+#define col 20
+
+using namespace std;
+
+struct tmatriz
+{
+	int mat[fil][col];
+};
+
+tmatriz matriz[fil][col];
+
+void cargar(tmatriz m[fil][col], int n);
+void mostrar(tmatriz m[fil][col], int n);
+void suma(tmatriz m[fil][col], int n);
+
+void main()
+{int n,m;
+ 
+
+ cout<<"ingrese el tamaño de la matriz principal: ";
+ cin>>n;
+
+ cargar(matriz,n);
+ mostrar(matriz,n);
+ suma(matriz,n);
+
+ getch();
+
+	
+}
+
+void cargar(tmatriz m[fil][col], int n)
+{int i, j, k, l;
+
+ for(i=0;i<n;i++)
+  {for(j=0;j<n;j++)
+   {for(k=0;k<n;k++)
+     {for(l=0;l<n;l++)
+       {cout<<"ingrese un numero: ";
+        cin>>m[i][j].mat[k][l];
+       }
+     }
+   }
+  }
+}
+
+
+void mostrar(tmatriz m[fil][col], int n)
+{int i, j, k, l;
+
+ for(i=0;i<n;i++)
+  {for(j=0;j<n;j++)
+   {for(k=0;k<n;k++)
+     {for(l=0;l<n;l++)
+       {
+        cout<<m[i][j].mat[k][l]<<"  \t";
+       }
+      
+      cout<<endl;
+     }
+ cout<<endl;
+   }
+ 
+  }
+}
+
