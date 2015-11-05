@@ -1,0 +1,73 @@
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+#include <string>
+#include "stdlib.h"
+
+using namespace std;
+
+struct t_cliente{
+	int codcliente;
+	string nombre;
+	string apellido;
+	string nit;
+	string fecnac;
+};
+
+t_cliente registro;
+FILE *alias;
+
+int ALTA_DIRECTA(void);
+
+void main()
+{   
+   
+   int dir_fisica;
+   int codcliente;
+   system("cls");
+   
+   
+   cout<<" ingrese codigo cliente:";
+   cin>> codcliente;
+
+   alias=fopen ("CLIENTE.DIR","rb+");
+
+   if(alias==NULL)
+
+      alias =fopen("CLIENTE.DIR","wb");
+
+   dir_fisica=codcliente*sizeof(registro);
+ 
+   fseek (alias,dir_fisica,SEEK_SET);
+ 
+   fread(&registro,sizeof(registro),1,alias);
+  
+   if(registro.codcliente==codcliente)
+ 
+   {
+	   cout<<"registro duplicado";
+	   fclose(alias);
+	   getch();
+	   return;
+   }
+
+   {
+   cout<<"\n nombre:";    cin>>registro.nombre;
+   cout<<"\n apellido:";  cin>>registro.apellido;
+   cout<<"\n nit:";       cin>>registro.nit;
+   cout<<"\n fecnac:";    cin>>registro.fecnac;
+   }
+
+   registro.codcliente=codcliente;
+   
+   fseek(alias,dir_fisica,SEEK_SET);
+  
+   fwrite(&registro,sizeof(registro),1,alias);
+  
+   fclose(alias);
+
+   cout<<"\n producto registro";
+   cout<<"\n ºº oprima cualquier tecla para continuar ºº";
+   getch();
+   
+}
