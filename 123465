@@ -1,0 +1,69 @@
+#include "stdafx.h"
+#include "conio.h"
+#include <iostream>
+#include <stdio.h>
+#include<stdlib.h>
+using namespace std;
+//Estructura para los artículos
+//es mejorable!...
+struct supermercado
+{
+    int cantidad_articulos;
+    float  valor_producto;
+    char nombre_producto[70];
+};
+
+int main()
+{
+    struct supermercado super[100];
+    //Variable para el total de la factura
+    float total_vendido = 0.0;
+    int total_articulos_vendidos = 0;
+    //Para controlar la cantidad de artículos
+    int cantidad=1;
+    //Solicitamos datos para confeccionar la factura
+    printf("Sistema de Caja del Supermercado ELINV.\n\n");
+    printf("Para finalizar facturacion, ingrese cero(0)\n\n"
+           "Ingrese cantidad a vender :\t");
+    scanf("%d",&super[0].cantidad_articulos);
+    printf("Ingrese nombre del articulo :\t");
+    scanf("%70s",super[0].nombre_producto);
+    printf("Ingrese valor articulo :\t");
+    scanf("%f",&super[0].valor_producto);
+    //Bucle para continuar venta de artículos
+    //Recordar que no pueden ser mas de 100 artículos
+    while(cantidad < 100)
+    {
+        system("cls");              //limpiamos la pantalla
+        printf("Sistema de Caja del Supermercado ELINV.\n\n");
+        printf("Para finalizar facturacion, ingrese cero(0)\n\n"
+               "Ingrese cantidad a vender :\t");
+        scanf("%d",&super[cantidad].cantidad_articulos);
+        //si la cantidad que se vende es cero, sale del bucle
+        if(super[cantidad].cantidad_articulos==0)
+        {
+            cantidad = 101;
+            break;
+        }
+        printf("Ingrese nombre del articulo :\t");
+        scanf("%70s",super[cantidad].nombre_producto);
+        printf("Ingrese valor articulo :\t");
+        scanf("%f",&super[cantidad].valor_producto);
+        cantidad++;
+    }
+    //Finalmente confeccionamos la factura
+    system("cls");              //limpiamos la pantalla
+    printf("Casa ELINV: \n");
+    printf("Factura tipo [C]: \n");
+    printf("---------------- \n");
+    printf("VENTAS: \n");
+    printf("---------------- \n");
+    printf("Cantidad\tArticulo\tPrecio x Unidad\t\tTotal\n");
+    printf("--------\t--------\t---------------\t\t-----\n");
+    //Reiniciamos la variable cantidad
+    cantidad = 0;
+    while(cantidad < 100)
+    {
+        //si la cantidad que se vendió es cero, sale del bucle
+        if(super[cantidad].cantidad_articulos==0)
+        {
