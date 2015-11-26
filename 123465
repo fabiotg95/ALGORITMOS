@@ -67,3 +67,27 @@ int main()
         //si la cantidad que se vendió es cero, sale del bucle
         if(super[cantidad].cantidad_articulos==0)
         {
+            cantidad = 101;
+            break;
+        }
+        printf("%d\t\t%s\t\t%2.2f\t\t\t%2.2f\n",
+               super[cantidad].cantidad_articulos,
+               super[cantidad].nombre_producto,
+               super[cantidad].valor_producto,
+               super[cantidad].cantidad_articulos*
+               super[cantidad].valor_producto);
+        total_vendido = total_vendido +
+                        super[cantidad].cantidad_articulos*
+                        super[cantidad].valor_producto;
+        total_articulos_vendidos = total_articulos_vendidos +
+                                   super[cantidad].cantidad_articulos;
+        cantidad++;
+    }
+    printf("--------\t--------\t---------------\t\t-----\n");
+    printf("%d articulos vendidos\t\t\t\tTotal $\t%2.2f\n\n",
+           total_articulos_vendidos, total_vendido);
+    //Pausa para ver resultados.
+    system("PAUSE");
+    //Salimos.
+    return EXIT_SUCCESS;
+}
