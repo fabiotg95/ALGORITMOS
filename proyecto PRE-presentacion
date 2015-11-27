@@ -1,0 +1,2831 @@
+#include <iostream>
+#include <conio.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+using namespace std;
+// Inicio Programa Proyecto.cpp
+// Estructura Sucursal
+struct Sucursal
+{	int   IdSucursal;
+	char  Nombre[15];
+	char  Direccion[20]; 
+	char  Estado;
+};
+// Estructura Caja
+struct Caja
+{
+	int   IdCaja;
+	char  Nombre[15];
+	int   IdSucursal;
+	char  Estado;
+};
+// Estructura Cajero 
+struct Cajero
+{
+	int   IdCajero;
+	char  Nombre[15];
+	char  Telefono[10];
+	char  Email[20];
+	char  Direccion[20];
+	int   IdCaja;
+	char  Estado;
+};
+// Estructura Cliente 
+struct Cliente
+{
+	int   IdCliente;
+	char  Nombre[15];
+	char  NIT[15];
+	char  Direccion[20];
+	char  Telefono[10];
+	char  Email[20]; 
+	char  Estado;
+};
+// Estructura Producto
+struct Producto
+{
+	int   IdProducto;
+	char  Nombre[20];
+	int   Stock;
+	float Precio;
+	char  Estado;
+};
+// Estructura Ingreso
+struct Ingreso
+{
+	int   IdIngreso;
+	int	  IdProducto;
+	int   Cantidad;
+	char  Estado;
+};
+//Estructura Venta
+struct Venta
+{
+	int   IdVenta;
+	int   IdCajero;
+	int   IdCliente;
+	int   IdProducto;
+	int   Cantidad;
+	float PrecioUnit;
+	char  Fecha[11];
+	char  Estado;
+};
+// Menu Principal
+void Menu_Principal()
+{ 
+	cout << "\n  -----------------------------";
+	cout << "\n |   Menu General Opciones     |";
+	cout << "\n  -----------------------------";
+	cout << "\n | 1. Archivo Sucursal         |";
+	cout << "\n | 2. Archivo Caja             |";
+	cout << "\n | 3. Archivo Cajero           |";
+	cout << "\n | 4. Archivo Cliente          |";
+	cout << "\n | 5. Archivo Producto         |";
+	cout << "\n | 6. Archivo Ingreso          |";
+	cout << "\n | 7. Archivo Venta            |";
+	cout << "\n | 8. Crear Archivos           |";
+	cout << "\n | 9. Reporte Venta por Fechas |";
+	cout << "\n | 10. Reporte Sucursal        |";
+	cout << "\n | 11. Salir                   |";
+	cout << "\n  ----------------------------- ";
+	cout << "\n ** Elija Una Opcion: ";
+}
+// Sub Menu Principal
+void Menu_Secundario()
+{ 
+	cout << "\n  --------------------------";
+	cout << "\n | Menu Secundario Opciones |";
+	cout << "\n  --------------------------";
+	cout << "\n | 1. Anadir Datos          |";
+	cout << "\n | 2. Borrar Datos          |";
+	cout << "\n | 3. Modificar Datos       |";
+	cout << "\n | 4. Consultar Datos       |";
+	cout << "\n | 5. Salir                 |";
+	cout << "\n  -------------------------- ";
+	cout << "\n ** Elija Una Opcion: ";
+}
+// Funciones de Validacion
+bool existesucursal(int IdSucursal)		
+{
+	FILE*ptr;
+    Sucursal X;
+	bool encontro=false;
+	ptr=fopen("Sucursal.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Sucursal),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdSucursal==IdSucursal && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Sucursal),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existecaja(int IdCaja)		
+{
+	FILE*ptr;
+    Caja X;
+	bool encontro=false;
+	ptr=fopen("Caja.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Caja),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdCaja==IdCaja && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Caja),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existecajero(int IdCajero)		
+{
+	FILE*ptr;
+    Cajero X;
+	bool encontro=false;
+	ptr=fopen("Cajero.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";}
+	else
+	{
+		fread(&X,sizeof(struct Cajero),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdCajero==IdCajero && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Cajero),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existecliente(int IdCliente)		
+{
+	FILE*ptr;
+    Cliente X;
+	bool encontro=false;
+	ptr=fopen("Cliente.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Cliente),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdCliente==IdCliente && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Cliente),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existeproducto(int IdProducto)		
+{
+	FILE*ptr;
+	Producto X;
+	bool encontro=false;
+	ptr=fopen("Producto.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Producto),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdProducto==IdProducto && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Producto),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existeingreso(int IdIngreso)		
+{
+	FILE*ptr;
+	Ingreso X;
+	bool encontro=false;
+	ptr=fopen("Ingreso.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Ingreso),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdIngreso==IdIngreso && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Ingreso),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existeventa(int IdVenta)		
+{
+	FILE*ptr;
+	Venta X;
+	bool encontro=false;
+	ptr=fopen("Venta.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Venta),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdVenta==IdVenta && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Venta),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existesucursalencaja(int IdSucursal)	
+{
+	FILE*ptr; 
+    Caja X;
+	bool encontro=false;
+	ptr=fopen("Caja.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Caja),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdSucursal==IdSucursal && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Caja),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existecajaencajero(int IdCaja)		
+{
+	FILE*ptr; 
+    Cajero X;
+	bool encontro=false;
+	ptr=fopen("Cajero.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Cajero),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdCaja==IdCaja && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Cajero),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existeproductoeningreso(int IdProducto)	
+{
+	FILE*ptr;
+	Ingreso X;
+	bool encontro=false;
+	ptr=fopen("Ingreso.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Ingreso),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdProducto==IdProducto && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Ingreso),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existecajeroenventa(int IdCajero)		
+{
+	FILE*ptr; 
+    Venta X;
+	bool encontro=false;
+	ptr=fopen("Venta.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Venta),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdCajero==IdCajero && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Venta),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existeclienteenventa(int IdCliente)		
+{
+	FILE*ptr; 
+    Venta X;
+	bool encontro=false;
+	ptr=fopen("Venta.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Venta),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdCliente==IdCliente && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Venta),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool existeproductoenventa(int IdProducto)	
+{
+	FILE*ptr;
+	Venta X;
+	bool encontro=false;
+	ptr=fopen("Venta.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Venta),1,ptr);
+		while(!feof(ptr))
+		{	
+			if(X.IdProducto==IdProducto && X.Estado=='N')
+			{ 
+				encontro=true;
+			}
+			fread(&X,sizeof(struct Venta),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return encontro;
+}
+bool NoEsNumeroInt(char *Numero)
+{
+    int largo;
+    bool noesnum, salir;
+    noesnum=false;
+    salir=false;
+    largo=strlen(Numero);
+    for(int i=0;(i<largo) && (!salir);i++)
+    {
+        if(Numero[i]!= '0' && Numero[i]!= '1' && Numero[i]!= '2' && Numero[i]!= '3' && Numero[i]!= '4' && Numero[i]!= '5' && Numero[i]!= '6' && Numero[i]!= '7' && Numero[i]!= '8' && Numero[i]!= '9')
+        {
+            noesnum=true;
+            salir=true;
+        }
+    }
+    return noesnum;
+}
+int ConvertirCharToInt(char *Numero)
+{
+	int nro=0,num,pos=1;
+	int largo;
+	largo=strlen(Numero);
+    for(int i=largo-1;(i>=0);i--)
+    {
+		if(Numero[i] == '1')
+		{  
+			num=1;
+		}
+		if(Numero[i] == '2')
+		{
+			num=2;
+		}
+		if(Numero[i]== '3')
+		{
+			num=3;
+		}
+		if(Numero[i]== '4')
+		{
+			num=4;
+		}
+		if(Numero[i]== '5')
+		{
+			num=5;
+		}
+		if(Numero[i]== '6')
+		{
+			num=6;
+		}
+		if(Numero[i]== '7')
+		{
+			num=7;
+		}
+		if(Numero[i]== '8')
+		{
+			num=8;
+		}
+		if(Numero[i]== '9')
+		{
+			num=9;
+		}
+		if(Numero[i]== '0')
+		{
+			num=0;
+		}
+		nro=nro+(num*pos);
+        pos=pos*10;
+    }
+    return nro;
+}
+// Programas de Modificacion
+// Programas Sucursal
+void A_Sucursal()
+{
+	FILE*ptr;
+	Sucursal X;
+	ptr=fopen("Sucursal.dat", "a+");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		cout << "\n ** Introducir Datos";
+		cout << "\n --------------------- \n";
+		char numero[10];
+		bool valnumero; 
+		do{
+			valnumero=false;
+			cout<<" Id_Sucursal : "; 
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdSucursal=ConvertirCharToInt(numero);
+				if(existesucursal(X.IdSucursal))
+				{
+					valnumero=false;
+					cout<<"\nEl codigo de Sucursal ya existe..."<<endl;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		do
+		{
+			cout<<" Nombre : ";
+			do
+			{
+				gets(X.Nombre);
+			}while(strlen(X.Nombre)==0);
+		}while(strlen(X.Nombre)>14);
+		do
+		{
+			cout << " Direccion : ";
+			do
+			{
+				gets(X.Direccion);
+			}while(strlen(X.Direccion)==0);
+		}while(strlen(X.Direccion)>19);
+		X.Estado='N';         
+		fwrite(&X,sizeof(struct Sucursal),1,ptr);
+	}
+	fclose(ptr);
+	cout<<"\n\n";
+	system("pause");
+}
+void B_Sucursal()
+{
+	FILE*ptr;
+	Sucursal X; 
+	int n;
+	char ene[10];
+	bool valene; 
+	do
+	{
+		cout << " Registro A Eliminar: ";
+		valene=false;
+ 		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Sucursal.dat","r+");
+	if(ptr==NULL)
+	{
+		cout << "El Archivo No Existe....";
+	}
+	else 
+	{
+		fseek(ptr,(n-1)*sizeof(struct Sucursal),SEEK_SET);
+		fread(&X,sizeof(struct Sucursal),1,ptr);
+		if(!feof (ptr))
+		{
+			if(X.Estado=='N' && !existesucursalencaja(X.IdSucursal))
+			{
+				cout << "\n Eliminando Registro ";
+				cout << "\n --> " <<X.IdSucursal<<" | "<<X.Nombre<<" | "<<X.Direccion;
+				X.Estado='S';
+				fseek(ptr,(n-1)*sizeof(struct Sucursal),SEEK_SET);
+				fwrite(&X,sizeof(struct Sucursal),1,ptr);
+			}
+			else
+			{
+				cout <<" El Registro Fue Eliminado o esta siendo usado";
+			}
+		}
+		else
+		{
+			cout << "El Registro No Existe....";
+		}
+	}
+	fclose (ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void M_Sucursal()
+{
+	FILE*ptr;
+	Sucursal X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Registro A Modificar: ";
+		valene=false;
+ 		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Sucursal.dat","r+");
+	if(ptr == NULL)
+	{
+		cout << "\n Archivo no existente ...";
+	}
+	else
+	{
+		fseek(ptr,(n-1)*sizeof(struct Sucursal),SEEK_SET);
+		if(!feof(ptr))
+		{
+			fread(&X,sizeof(struct Sucursal),1,ptr);
+			if(X.Estado == 'N')
+			{
+				cout << "\n Datos Actuales Son "; 
+				cout << "\n --> "<<X.IdSucursal<<" | "<<X.Nombre<<" | "<<X.Direccion;
+				cout << "\n Introducir Datos Nuevos \n";
+				char numero[10];
+				bool valnumero; 
+				do
+				{
+					valnumero=false;
+					cout<<" Id_Sucursal : "; 
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						if(existesucursal(ConvertirCharToInt(numero)) && X.IdSucursal!=ConvertirCharToInt(numero) && !existesucursalencaja(X.IdSucursal))
+						{
+							valnumero=false;
+							cout<<"\nEl codigo de Sucursal ya existe o esta siendo usado"<<endl;
+						}
+						else
+						{
+							X.IdSucursal=ConvertirCharToInt(numero); 	
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				do
+				{
+					cout<<" Nombre : ";
+					do
+					{
+						gets(X.Nombre);
+					}while(strlen(X.Nombre)==0);
+				}while(strlen(X.Nombre)>14);
+				do
+				{
+					cout << " Direccion : ";
+					do
+					{
+						gets(X.Direccion);
+					}while(strlen(X.Direccion)==0);
+				}while(strlen(X.Direccion)>19);
+				X.Estado='N';
+				fseek(ptr,(n-1)*sizeof(struct Sucursal),SEEK_SET);
+				fwrite(&X,sizeof(struct Sucursal),1,ptr);
+			}
+			else
+			{
+					cout << "\n El Registro Fue Eliminado ...";
+			}
+		}	
+		else
+		{
+			cout << "\n El Registro No existe ...";
+		}
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void C_Sucursal()
+{
+	FILE*ptr; 
+	int n=1;
+	Sucursal X;
+	ptr=fopen("Sucursal.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Sucursal),1,ptr);
+		cout << "\n  ---------------------------------------------------- ";
+		cout << "\n | N | Id Sucursal | Nombre | Direccion | Estado |";
+		cout << "\n  ---------------------------------------------------- ";
+		while(!feof(ptr))
+		{ 
+			if(X.Estado=='N')
+			{
+				cout << "\n | " << n <<" | "<<X.IdSucursal <<" | "<<X.Nombre <<" | "<<X.Direccion <<" | "<<X.Estado;
+			}
+     		fread(&X,sizeof(struct Sucursal),1,ptr);
+	 		n++;
+		}
+	}
+	fclose(ptr);
+	cout <<"\n\n";    
+	system("pause");
+}
+// Programas Caja
+void A_Caja()
+{
+	FILE*ptr;
+	Caja X;
+	ptr=fopen("Caja.dat", "a+");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else 
+	{
+		cout << "\n ** Introducir Datos";
+		cout << "\n --------------------- \n";
+		char numero[10];
+		bool valnumero; 
+		do
+		{
+			valnumero=false;
+			cout << " Id_Caja : ";
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdCaja=ConvertirCharToInt(numero);
+				if(existecaja(X.IdCaja))
+				{
+					valnumero=false;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		do
+		{
+			cout<<" Nombre : ";
+			do
+			{
+				gets(X.Nombre);
+			}while(strlen(X.Nombre)==0);
+		}while(strlen(X.Nombre)>14);
+		do
+		{
+			valnumero=false;
+			cout << " Id_Sucursal : ";
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdSucursal=ConvertirCharToInt(numero);
+				if(!existesucursal(X.IdSucursal))
+				{
+					valnumero=false;
+					cout<<"\nEl codigo de Sucursal no existe..."<<endl;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		X.Estado='N'; 
+		fwrite(&X,sizeof(struct Caja),1,ptr);
+	}
+	fclose(ptr);
+	cout <<"\n\n";    
+	system("pause");
+}
+void B_Caja()
+{
+	FILE*ptr;
+	Caja X; 
+	int n;
+ 	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Registro A Eliminar: ";
+		valene=false;
+ 		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Caja.dat","r+");
+	if(ptr==NULL)
+	{
+		cout << "El Archivo No Existe....";
+	}
+	else 
+	{
+		fseek(ptr,(n-1)*sizeof(struct Caja),SEEK_SET);
+		fread(&X,sizeof(struct Caja),1,ptr);
+		if(!feof (ptr))
+		{
+			if(X.Estado=='N' && !existecajaencajero(X.IdCaja))
+			{
+				cout << "\n Eliminando Registro ";
+				cout << "\n --> " <<X.IdCaja<<" | "<<X.Nombre<<" | "<<X.IdSucursal;
+				X.Estado='S';
+				fseek(ptr,(n-1)*sizeof(struct Caja),SEEK_SET);
+				fwrite(&X,sizeof(struct Caja),1,ptr);
+			}
+			else
+			{
+				cout <<" El Registro Fue Eliminado o esta siendo usado";
+			}
+		}
+		else
+		{
+			cout << "El Registro No Existe....";
+		}
+	}
+	fclose (ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void M_Caja()
+{
+	FILE*ptr;
+	Caja X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Registro A Modificar: ";
+		valene=false;
+ 		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Caja.dat","r+");
+	if(ptr == NULL)
+	{
+		cout << "\n Archivo no existente ...";
+	}
+	else
+	{
+		fseek(ptr,(n-1)*sizeof(struct Caja),SEEK_SET);
+		if(!feof(ptr))
+		{
+			fread(&X,sizeof(struct Caja),1,ptr);
+			if(X.Estado == 'N')
+			{
+				cout << "\n Datos Actuales Son "; 
+				cout << "\n --> "<<X.IdCaja<<" | "<<X.Nombre<<" | "<<X.IdSucursal;
+				cout << "\n Introducir Datos Nuevos \n";
+				char numero[10];
+				bool valnumero; 
+				do
+				{
+					valnumero=false;
+					cout<<" Id_Caja : "; 
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						if(existecaja(ConvertirCharToInt(numero)) && X.IdCaja!=ConvertirCharToInt(numero) && !existecajaencajero(X.IdCaja))
+						{
+							valnumero=false;
+							cout<<"\nEl codigo de Caja ya existe o esta siendo usado"<<endl;
+						}
+						else
+						{
+							X.IdCaja=ConvertirCharToInt(numero); 	
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				do
+				{   
+					cout<<" Nombre : ";
+					do
+					{
+						gets(X.Nombre);
+					}while(strlen(X.Nombre)==0);
+				}while(strlen(X.Nombre)>14);
+				do
+				{
+					valnumero=false;
+					cout << " Id_Sucursal : ";
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						X.IdSucursal=ConvertirCharToInt(numero);
+						if(!existesucursal(X.IdSucursal))
+						{
+							valnumero=false;
+							cout<<"\nEl codigo de Sucursal no existe..."<<endl;
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				X.Estado = 'N';
+				fseek(ptr,(n-1)*sizeof(struct Caja),SEEK_SET);
+				fwrite(&X,sizeof(struct Caja),1,ptr);
+			}
+			else
+			{
+				cout << "\n El Registro Fue Eliminado ...";
+			}
+		}
+		else
+		{
+			cout << "\n El Registro No existe ...";
+		}
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void C_Caja()
+{
+	FILE*ptr; 
+	int n=1;
+	Caja X;
+	ptr=fopen("Caja.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Caja),1,ptr);
+		cout << "\n  ---------------------------------------------- ";
+		cout << "\n | N | Id Caja | Nombre | Id Sucursal | Estado |";
+		cout << "\n  ---------------------------------------------- ";
+		while(!feof(ptr))
+		{ 
+			if(X.Estado=='N')
+			{
+				cout << "\n | " << n <<" | "<<X.IdCaja <<" | "<<X.Nombre <<" | "<<X.IdSucursal <<" | "<<X.Estado;
+			}  
+			fread(&X,sizeof(struct Caja),1,ptr);
+			n++;
+		}
+	}
+	fclose(ptr);
+	cout <<"\n\n";    
+	system("pause");
+}
+// Programas Cajero
+void A_Cajero()
+{
+	FILE*ptr;
+	Cajero X;
+	ptr=fopen("Cajero.dat", "a+");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else 
+	{
+		cout << "\n ** Introducir Datos";
+		cout << "\n --------------------- \n";
+		char numero[10];
+		bool valnumero; 
+		do
+		{
+			valnumero=false;
+			cout<<" Id_Cajero : "; 
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdCajero=ConvertirCharToInt(numero);
+				if(existecajero(X.IdCajero))
+				{
+					valnumero=false;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		do
+		{   
+			cout<<" Nombre : ";
+			do
+			{
+				gets(X.Nombre);
+			}while(strlen(X.Nombre)==0);
+		}while(strlen(X.Nombre)>14);
+		do
+		{   
+			cout<<" Telefono : ";
+			do
+			{
+				gets(X.Telefono);
+			}while(strlen(X.Telefono)==0);
+		}while(strlen(X.Telefono)>9);
+		do
+		{   
+			cout<<" E-mail : ";
+			do
+			{
+				gets(X.Email);
+			}while(strlen(X.Email)==0);
+		}while(strlen(X.Email)>19);
+		do
+		{   
+			cout<<" Direccion : ";
+			do
+			{
+				gets(X.Direccion);
+			}while(strlen(X.Direccion)==0);
+		}while(strlen(X.Direccion)>19);
+		do
+		{
+			valnumero=false;
+			cout << " Id_Caja : ";
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdCaja=ConvertirCharToInt(numero);
+				if(!existecaja(X.IdCaja))
+				{
+					valnumero=false;
+					cout<<"\nEl codigo de Caja no existe..."<<endl;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		X.Estado='N';         
+		fwrite(&X,sizeof(struct Cajero),1,ptr);
+	}
+	fclose(ptr);
+	cout <<"\n\n";    
+	system("pause");
+}
+void B_Cajero()
+{
+	FILE*ptr;
+	Cajero X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Registro A Eliminar: ";
+		valene=false;
+ 		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Cajero.dat","r+");
+	if(ptr==NULL)
+	{
+		cout << "El Archivo No Existe....";
+	}
+	else 
+	{
+		fseek(ptr,(n-1)*sizeof(struct Cajero),SEEK_SET);
+		fread(&X,sizeof(struct Cajero),1,ptr);
+		if(!feof (ptr))
+		{
+			if(X.Estado=='N' && !existecajeroenventa(X.IdCajero))
+			{
+				cout << "\n Eliminando Registro ";
+				cout << "\n --> "<<X.IdCajero<<" | "<<X.Nombre<<" | "<<X.Telefono<<" | "<<X.Email<<" | "<<X.Direccion<<" | "<<X.IdCaja;
+				X.Estado='S';
+				fseek(ptr,(n-1)*sizeof(struct Cajero),SEEK_SET);
+				fwrite(&X,sizeof(struct Cajero),1,ptr);
+			}
+			else
+			{
+				cout <<" El Registro Fue Eliminado o esta siendo usado";
+			}
+		}
+		else
+		{
+			cout << "El Registro No Existe....";
+		}
+		fclose (ptr);
+	}
+	cout <<"\n";  
+	system("pause");
+}
+void M_Cajero()
+{
+	FILE*ptr;
+	Cajero X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Registro A Modificar: ";
+		valene=false;
+ 		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Cajero.dat","r+");
+	if(ptr == NULL)
+	{
+		cout << "\n Archivo no existente ...";
+	}
+	else
+	{
+		fseek(ptr,(n-1)*sizeof(struct Cajero),SEEK_SET);
+		fread(&X,sizeof(struct Cajero),1,ptr);
+		if(!feof(ptr))
+		{
+			if(X.Estado == 'N')
+			{
+				cout << "\n Datos Actuales Son "; 
+				cout << "\n -->"<<X.IdCajero<<" | "<<X.Nombre<<" | "<<X.Telefono<<" | "<<X.Email<<" | "<<X.Direccion<<" | "<<X.IdCaja;
+				cout << "\n Introducir Datos Nuevos \n";
+				char numero[10];
+				bool valnumero; 
+				do
+				{
+					valnumero=false;
+					cout<<" Id_Cajero : "; 
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						if(existecajero(ConvertirCharToInt(numero)) && X.IdCajero!=ConvertirCharToInt(numero) && !existecajeroenventa(X.IdCajero))
+						{
+							valnumero=false;
+							cout<<"\nEl codigo de Cajero ya existe o esta siendo usado"<<endl;
+						}
+						else
+						{
+							X.IdCajero=ConvertirCharToInt(numero); 	
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				do
+				{   
+					cout<<" Nombre : ";
+					do
+					{
+						gets(X.Nombre);
+					}while(strlen(X.Nombre)==0);
+				}while(strlen(X.Nombre)>14);
+				do
+				{   
+					cout<<" Telefono : ";
+					do
+					{
+						gets(X.Telefono);
+					}while(strlen(X.Telefono)==0);
+				}while(strlen(X.Telefono)>9);
+				do
+				{   
+					cout<<" E-mail : ";
+					do
+					{
+						gets(X.Email);
+					}while(strlen(X.Email)==0);
+				}while(strlen(X.Email)>19);
+				do
+				{   
+					cout<<" Direccion : ";
+					do
+					{
+						gets(X.Direccion);
+					}while(strlen(X.Direccion)==0);
+				}while(strlen(X.Direccion)>19);
+				do
+				{
+					valnumero=false;
+					cout << " Id_Caja : ";
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						X.IdCaja=ConvertirCharToInt(numero);
+						if(!existecaja(X.IdCaja))
+						{
+							valnumero=false;
+							cout<<"\nEl codigo de Caja no existe..."<<endl;
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				X.Estado='N';
+				fseek(ptr,(n-1)*sizeof(struct Cajero),SEEK_SET);
+				fwrite(&X,sizeof(struct Cajero),1,ptr);
+			}
+			else
+			{
+				cout << "\n El Registro Fue Eliminado ...";
+			}
+		}
+		else
+		{
+			cout << "\n El Registro No existe ...";
+		}
+		fclose(ptr);
+	}
+   cout <<"\n";  
+   system("pause");
+}
+void C_Cajero()
+{
+	FILE*ptr; 
+	int n=1;
+	Cajero X;
+	ptr=fopen("Cajero.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Cajero),1,ptr);
+		cout << "\n  -------------------------------------------------------------------------- ";
+		cout << "\n | N | Id Cajero | Nombre | Telefono | E-Mail | Direccion | Id Caja | Estado";
+		cout << "\n  -------------------------------------------------------------------------- ";
+		while(!feof(ptr))
+		{
+			if(X.Estado=='N')
+			{
+				cout << "\n | "<< n <<" | "<<X.IdCajero<<" | "<<X.Nombre<<" | "<<X.Telefono<<" | "<<X.Email<<" | "<<X.Direccion<<" | "<<X.IdCaja<<" "<<X.Estado;
+			} 
+			fread(&X,sizeof(struct Cajero),1,ptr);
+			n++;
+		}
+		fclose(ptr);
+	}
+	cout <<"\n";  
+	system("pause");
+}
+// Programas Cliente
+void A_Cliente()
+{
+	FILE*ptr;
+	Cliente X;
+	ptr=fopen("Cliente.dat", "a+");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else 
+	{
+		cout << "\n ** Introducir Datos";
+		cout << "\n --------------------- \n";
+		char numero[10];
+		bool valnumero; 
+		do
+		{
+			valnumero=false;
+			cout<<" Id_Cliente : "; 
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdCliente=ConvertirCharToInt(numero);
+				if(existecliente(X.IdCliente))
+				{
+					valnumero=false;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		do
+		{   
+			cout<<" Nombre : ";
+			do
+			{
+				gets(X.Nombre);
+			}while(strlen(X.Nombre)==0);
+		}while(strlen(X.Nombre)>14);
+		do
+		{
+			cout << " NIT : ";
+			do
+			{
+				gets(X.NIT);
+			}while(strlen(X.NIT)==0);
+		}while(strlen(X.NIT)>14);
+		do
+		{
+			cout << " Direccion : ";
+			do
+			{
+				gets(X.Direccion);
+			}while(strlen(X.Direccion)==0);
+		}while(strlen(X.Direccion)>19);
+		do
+		{
+			cout << " Telefono : ";
+			do
+			{
+				gets(X.Telefono);
+			}while(strlen(X.Telefono)==0);
+		}while(strlen(X.Telefono)>9);
+		do
+		{
+			cout << " E-Mail : ";
+			do
+			{
+				gets(X.Email);
+			}while(strlen(X.Email)==0);
+		}while(strlen(X.Email)>19);
+		X.Estado='N';         
+		fwrite(&X,sizeof(struct Cliente),1,ptr);
+		fclose(ptr);}
+		cout <<"\n\n";
+		system("pause");
+}
+void B_Cliente()
+{
+	FILE*ptr;
+	Cliente X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Registro A Eliminar: ";
+		valene=false;
+ 		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Cliente.dat","r+");
+	if(ptr==NULL)
+	{
+		cout << "El Archivo No Existe....";
+	}
+	else 
+	{
+		fseek(ptr,(n-1)*sizeof(struct Cliente),SEEK_SET);
+		fread(&X,sizeof(struct Cliente),1,ptr);
+		if(!feof (ptr))
+		{
+			if(X.Estado=='N' && !existeclienteenventa(X.IdCliente))
+			{
+				cout << "\n Eliminando Registro ";
+				cout << "\n --> "<<X.IdCliente<<" | "<<X.Nombre<<" | "<<X.NIT<<" | "<<X.Direccion<<" | "<<X.Telefono<<" | "<<X.Email;
+				X.Estado='S';
+				fseek(ptr,(n-1)*sizeof(struct Cliente),SEEK_SET);
+				fwrite(&X,sizeof(struct Cliente),1,ptr);
+			}
+			else
+			{
+				cout <<" El Registro Fue Eliminado o esta siendo usado";
+			}
+		}
+		else
+		{
+			cout << "El Registro No Existe....";
+		}
+	}
+	fclose (ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void M_Cliente()
+{
+	FILE*ptr;
+	Cliente X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Registro A Modificar: ";
+		valene=false;
+ 		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Cliente.dat","r+");
+	if(ptr == NULL)
+	{
+		cout << "\n Archivo no existente ...";
+	}
+	else
+	{
+		fseek(ptr,(n-1)*sizeof(struct Cliente),SEEK_SET);
+		if(!feof(ptr))
+		{
+			fread(&X,sizeof(struct Cliente),1,ptr);
+			if(X.Estado == 'N')
+			{
+				cout << "\n Datos Actuales Son "; 
+				cout << "\n -->"<<X.IdCliente<<" | "<<X.Nombre<<" | "<<X.NIT<<" | "<<X.Direccion<<" | "<<X.Telefono<<" | "<<X.Email;
+				cout << "\n Introducir Datos Nuevos \n";
+				char numero[10];
+				bool valnumero; 
+				do
+				{
+					valnumero=false;
+					cout<<" Id_Cliente : "; 
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						if(existecliente(ConvertirCharToInt(numero)) && X.IdCliente!=ConvertirCharToInt(numero) && !existeclienteenventa(X.IdCliente))
+						{
+							valnumero=false;
+							cout<<"\nEl codigo de cliente ya existe o esta siendo usado"<<endl;
+						}
+						else
+						{
+							X.IdCliente=ConvertirCharToInt(numero); 	
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				do
+				{   
+					cout<<" Nombre : ";
+					do
+					{
+						gets(X.Nombre);
+					}while(strlen(X.Nombre)==0);
+				}while(strlen(X.Nombre)>14);
+				do
+				{
+					cout << " NIT : ";
+					do
+					{
+						gets(X.NIT);
+					}while(strlen(X.NIT)==0);
+				}while(strlen(X.NIT)>14);
+				do
+				{
+					cout << " Direccion : ";
+					do
+					{
+						gets(X.Direccion);
+					}while(strlen(X.Direccion)==0);
+				}while(strlen(X.Direccion)>19);
+				do
+				{
+					cout << " Telefono : ";
+					do
+					{
+						gets(X.Telefono);
+					}while(strlen(X.Telefono)==0);
+				}while(strlen(X.Telefono)>9);
+				do
+				{
+					cout << " E-Mail : ";
+					do
+					{
+						gets(X.Email);
+					}while(strlen(X.Email)==0);
+				}while(strlen(X.Email)>19);
+				X.Estado='N';
+				fseek(ptr,(n-1)*sizeof(struct Cliente),SEEK_SET);
+				fwrite(&X,sizeof(struct Cliente),1,ptr);
+			}	
+			else
+			{
+				cout << "\n El Registro Fue Eliminado ...";
+			}
+		}
+		else
+		{
+			cout << "\n El Registro No existe ...";
+		}
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void C_Cliente()
+{
+	FILE*ptr; 
+	int n=1;
+	Cliente X;
+	ptr=fopen("Cliente.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Cliente),1,ptr);
+		cout << "\n  ------------------------------------------------------------------------ ";
+		cout << "\n | N | Id Cliente | Nombre | NIT | Direccion | Telefono | E-Mail | Estado |";
+		cout << "\n  ------------------------------------------------------------------------ ";
+		while(!feof(ptr))
+		{
+			if(X.Estado=='N')
+			{
+				cout << "\n | "<< n <<" | "<<X.IdCliente<<" | "<<X.Nombre<<" | "<<X.NIT<<" | "<<X.Direccion<<" | "<<X.Telefono<<" | "<<X.Email<<" | "<<X.Estado;
+			} 
+			fread(&X,sizeof(struct Cliente),1,ptr);
+			n++;
+		}
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+// Programas Producto
+void A_Producto()
+{
+	FILE*ptr;
+	Producto X;
+	ptr=fopen("Producto.dat","a+");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else 
+	{
+		cout << "\n ** Introducir Datos";
+		cout << "\n --------------------- \n";
+		char numero[10];
+		bool valnumero; 
+		do
+		{
+			valnumero=false;
+			cout<<" Id_Producto : "; 
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdProducto=ConvertirCharToInt(numero);
+				if(existeproducto(X.IdProducto))
+				{
+					valnumero=false;
+					cout<<"\nEl codigo de Producto ya existe..."<<endl;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		do
+		{   
+			cout<<" Nombre : ";
+			do
+			{
+				gets(X.Nombre);
+			}while(strlen(X.Nombre)==0);
+		}while(strlen(X.Nombre)>19);
+		char num[10];
+		do
+		{
+			valnumero=false;
+			cout<<" Stock : "; 
+			cin>>num;
+			if(!NoEsNumeroInt(num))
+			{
+				valnumero=true;
+				X.Stock=ConvertirCharToInt(num);
+			}
+		}while(strlen(num)==0 || !valnumero);
+		cout << " Precio : "; 
+		cin>>X.Precio;
+		X.Estado='N';
+		fwrite(&X,sizeof(struct Producto),1,ptr);
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void B_Producto()
+{
+	FILE*ptr;
+	Producto X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Registro A Eliminar: ";
+		valene=false;
+ 		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Producto.dat","r+");
+	if(ptr==NULL)
+	{
+		cout << "El Archivo No Existe....";
+	}
+	else 
+	{
+		fseek(ptr,(n-1)*sizeof(struct Producto),SEEK_SET);
+		fread(&X,sizeof(struct Producto),1,ptr);
+		if(!feof (ptr))
+		{
+			if(X.Estado=='N' && !existeproductoeningreso(X.IdProducto) && !existeproductoenventa(X.IdProducto))
+			{
+				cout << "\n Eliminando Registro ";
+				cout << "\n --> " <<X.IdProducto<<" | "<<X.Nombre<<" | "<<X.Stock<<" | "<<X.Precio;
+				X.Estado='S';
+				fseek(ptr,(n-1)*sizeof(struct Producto),SEEK_SET);
+				fwrite(&X,sizeof(struct Producto),1,ptr);
+			}
+			else
+			{
+				cout <<" El Registro Fue Eliminado o esta siendo usado";
+			}
+		}
+		else
+		{
+			cout << "El Registro No Existe....";
+		}
+	}
+	fclose (ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void M_Producto()
+{
+	FILE*ptr;
+	Producto X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Registro A Modificar: ";
+		valene=false;
+ 		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Producto.dat","r+");
+	if(ptr == NULL)
+	{
+		cout << "\n Archivo no existente ...";
+	}
+	else
+	{
+		fseek(ptr,(n-1)*sizeof(struct Producto),SEEK_SET);
+		if(!feof(ptr))
+		{
+			fread(&X,sizeof(struct Producto),1,ptr);
+			if(X.Estado == 'N')
+			{
+				cout << "\n Datos Actuales Son "; 
+				cout << "\n --> "<<X.IdProducto<<" | "<<X.Nombre<<" | "<<X.Stock<<" | "<<X.Precio;
+				cout << "\n Introducir Datos Nuevos \n";
+				char numero[10];
+				bool valnumero; 
+				do
+				{
+					valnumero=false;
+					cout<<" Id_Producto : "; 
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						if(existeproducto(ConvertirCharToInt(numero)) && X.IdProducto!=ConvertirCharToInt(numero) && !existeproductoeningreso(X.IdProducto)&& !existeproductoenventa(X.IdProducto))
+						{
+							valnumero=false;
+							cout<<"\nEl codigo de Producto ya existe o esta siendo usado"<<endl;
+						}
+						else
+						{
+							X.IdProducto=ConvertirCharToInt(numero); 	
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				do
+				{   
+					cout<<" Nombre : ";
+					do
+					{
+						gets(X.Nombre);
+					}while(strlen(X.Nombre)==0);
+				}while(strlen(X.Nombre)>19);
+				char num[10];
+				do
+				{
+					valnumero=false;
+					cout<<" Stock : "; 
+					cin>>num;
+					if(!NoEsNumeroInt(num))
+					{
+						valnumero=true;
+						X.Stock=ConvertirCharToInt(num);
+					}
+				}while(strlen(num)==0 || !valnumero);
+				cout << " Precio : "; 
+				cin>>X.Precio;
+				X.Estado='N';
+				fseek(ptr,(n-1)*sizeof(struct Producto),SEEK_SET);
+				fwrite(&X,sizeof(struct Producto),1,ptr);
+			}
+			else
+			{
+				cout << "\n El Registro Fue Eliminado ...";
+			}
+		}
+		else
+		{
+			cout << "\n El Registro No existe ...";
+		}
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void C_Producto()
+{
+	FILE*ptr; 
+	int n=1;
+	Producto X;
+	ptr=fopen("Producto.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Producto),1,ptr);
+		cout << "\n  --------------------------------------------------- ";
+		cout << "\n | N | Id_Producto | Nombre | Stock | Precio | Estado";
+		cout << "\n  --------------------------------------------------- ";
+		while(!feof(ptr))
+		{
+			if(X.Estado=='N')
+			{
+				cout << "\n | "<<n<<" | "<<X.IdProducto<<" | "<<X.Nombre<<" | "<<X.Stock<<" | "<<X.Precio<<" | "<<X.Estado;
+			} 
+			fread(&X,sizeof(struct Producto),1,ptr);
+			n++;
+		}
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+// Programas Ingreso
+void A_Ingreso()
+{
+	FILE*ptr;
+	Ingreso X;
+	ptr=fopen("Ingreso.dat", "a+");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else 
+	{
+		cout << "\n ** Introducir Datos";
+		cout << "\n --------------------- \n";
+		char numero[10];
+		bool valnumero; 
+		do
+		{
+			valnumero=false;
+			cout << " Id_Ingreso : ";
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdIngreso=ConvertirCharToInt(numero);
+				if(existeingreso(X.IdIngreso))
+				{
+					valnumero=false;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		do
+		{
+			valnumero=false;
+			cout << " Id_Producto : ";
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdProducto=ConvertirCharToInt(numero);
+				if(!existeproducto(X.IdProducto))
+				{
+					valnumero=false;
+					cout<<"\nEl codigo de Producto no existe..."<<endl;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		char num[10];
+		do
+		{
+			valnumero=false;
+			cout<<" Cantidad : ";
+			cin>>num;
+			if(!NoEsNumeroInt(num))
+			{
+				valnumero=true;
+				X.Cantidad=ConvertirCharToInt(num);
+			}
+		}while(strlen(num)==0 || !valnumero);	
+		X.Estado='N';         
+		fwrite(&X,sizeof(struct Ingreso),1,ptr);
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void B_Ingreso()
+{
+	FILE*ptr;
+	Ingreso X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Registro A Eliminar: ";
+		valene=false;
+ 		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Ingreso.dat","r+");
+	if(ptr==NULL)
+	{
+		cout << "El Archivo No Existe....";
+	}
+	else 
+	{
+		fseek(ptr,(n-1)*sizeof(struct Ingreso),SEEK_SET);
+		fread(&X,sizeof(struct Ingreso),1,ptr);
+		if(!feof (ptr))
+		{
+			if(X.Estado=='N')
+			{
+				cout << "\n Eliminando Registro ";
+				cout << "\n --> "<<X.IdIngreso<<" | "<<X.IdProducto<<" | "<<X.Cantidad;
+				X.Estado='S';
+				fseek(ptr,(n-1)*sizeof(struct Ingreso),SEEK_SET);
+				fwrite(&X,sizeof(struct Ingreso),1,ptr);
+			}
+			else
+			{
+				cout <<" El Registro Fue Eliminado...";
+			}
+		}
+		else
+		{
+			cout << "El Registro No Existe....";
+		}
+	}
+	fclose (ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void M_Ingreso()
+{
+	FILE*ptr;
+	Ingreso X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+	    cout << " Registro A Modificar: ";
+	    valene=false;
+	 	cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Ingreso.dat","r+");
+	if(ptr == NULL)
+	{
+		cout << "\n Archivo no existente ...";
+	}
+	else
+	{
+		fseek(ptr,(n-1)*sizeof(struct Ingreso),SEEK_SET);
+		fread(&X,sizeof(struct Ingreso),1,ptr);
+		if(!feof(ptr))
+		{
+			if(X.Estado == 'N')
+			{
+				cout << "\n Datos Actuales Son "; 
+				cout << "\n --> "<<X.IdIngreso<<" | "<<X.IdProducto<<" | "<<X.Cantidad;
+				cout << "\n Introducir Datos Nuevos \n";
+				char numero[10];
+				bool valnumero; 
+				do
+				{
+					valnumero=false;
+					cout<<" Id_Ingreso : "; 
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						if(existeingreso(ConvertirCharToInt(numero)) && X.IdIngreso!=ConvertirCharToInt(numero))
+						{
+							valnumero=false;
+						}
+						else
+						{
+							X.IdIngreso=ConvertirCharToInt(numero); 	
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				do
+				{
+					valnumero=false;
+					cout<<" Id_Producto : "; 
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						X.IdProducto=ConvertirCharToInt(numero);
+						if(!existeproducto(X.IdProducto))
+						{
+							valnumero=false;
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				char num[10];
+				do
+				{
+					valnumero=false;
+					cout<<" Cantidad : ";
+					cin>>num;
+					if(!NoEsNumeroInt(num))
+					{
+						valnumero=true;
+						X.Cantidad=ConvertirCharToInt(num);
+					}
+				}while(strlen(num)==0 || !valnumero);
+				X.Estado='N';
+				fseek(ptr,(n-1)*sizeof(struct Ingreso),SEEK_SET);
+				fwrite(&X,sizeof(struct Ingreso),1,ptr);
+			}
+			else
+			{
+				cout << "\n El Registro Fue Eliminado ...";
+			}
+		}
+		else
+		{
+			cout << "\n El Registro No existe ...";
+		}
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void C_Ingreso()
+{
+	FILE*ptr; 
+	int n=1;
+	Ingreso X;
+	ptr=fopen("Ingreso.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Ingreso),1,ptr);
+		cout << "\n  --------------------------------------------------- ";
+		cout << "\n | N | Id_Ingreso | Id_Producto | Cantidad | Estado |";
+		cout << "\n  --------------------------------------------------- ";
+		while(!feof(ptr))
+		{
+			if(X.Estado=='N')
+			{
+				cout << "\n "<<n<<" | "<<X.IdIngreso<<" | "<<X.IdProducto<<" | "<<X.Cantidad<<" | "<<X.Estado;
+			} 
+			fread(&X,sizeof(struct Ingreso),1,ptr);
+			n++;
+		}
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+
+// Programas Venta
+void A_Venta()
+{
+	FILE*ptr;
+	Venta X;
+	ptr=fopen("Venta.dat", "a+");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else 
+	{
+		cout << "\n ** Introducir Datos";
+		cout << "\n --------------------- \n";
+		char numero[10];
+		bool valnumero; 
+		do
+		{
+			valnumero=false;
+			cout<<" Id_Venta : "; 
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdVenta=ConvertirCharToInt(numero);
+				if(existeventa(X.IdVenta))
+				{
+					valnumero=false;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		do
+		{
+			valnumero=false;
+			cout<<" Id_Cajero : "; 
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdCajero=ConvertirCharToInt(numero);
+				if(!existecajero(X.IdCajero))
+				{
+					valnumero=false;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		do
+		{
+			valnumero=false;
+			cout<<" Id_Cliente : "; 
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdCliente=ConvertirCharToInt(numero);
+				if(!existecliente(X.IdCliente))
+				{
+					valnumero=false;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		do
+		{
+			valnumero=false;
+			cout<<" Id_Producto : "; 
+			cin>>numero;
+			if(!NoEsNumeroInt(numero))
+			{
+				valnumero=true;
+				X.IdProducto=ConvertirCharToInt(numero);
+				if(!existeproducto(X.IdProducto))
+				{
+					valnumero=false;
+				}
+			}
+		}while(strlen(numero)==0 || !valnumero);
+		char num[10];
+		do
+		{
+			valnumero=false;
+			cout<<" Cantidad : "; 
+			cin>>num;
+			if(!NoEsNumeroInt(num))
+			{
+				valnumero=true;
+				X.Cantidad=ConvertirCharToInt(num);
+			}
+		}while(strlen(num)==0 || !valnumero);
+		cout << " Precio Unitario : "; 
+		cin>>X.PrecioUnit;
+		do
+		{   
+			cout<<" Fecha : ";
+			do
+			{
+				gets(X.Fecha);
+			}while(strlen(X.Fecha)==0);
+		}while(strlen(X.Fecha)>10);
+		X.Estado='N';         
+		fwrite(&X,sizeof(struct Venta),1,ptr);
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void B_Venta()
+{
+	FILE*ptr;
+	Venta X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Regisro A Eliminar: ";
+		valene=false;
+		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Venta.dat","r+");
+	if(ptr==NULL)
+	{
+		cout << "El Archivo No Existe....";
+	}
+	else 
+	{
+		fseek(ptr,(n-1)*sizeof(struct Venta),SEEK_SET);
+		fread(&X,sizeof(struct Venta),1,ptr);
+		if(!feof (ptr))
+		{
+			if(X.Estado=='N')
+			{
+				cout << "\n Eliminando Registro ";
+				cout << "\n --> "<<X.IdVenta<<" | "<<X.IdCajero<<" | "<<X.IdCliente<<" | "<<X.IdProducto<<" | "<<X.Cantidad<<" | "<<X.PrecioUnit<<" | "<<X.Fecha;
+				X.Estado='S';
+				fseek(ptr,(n-1)*sizeof(struct Venta),SEEK_SET);
+				fwrite(&X,sizeof(struct Venta),1,ptr);
+			}
+			else
+			{
+				cout <<" El Registro Fue Eliminado";
+			}
+		}
+		else
+		{
+			cout << "El Registro No Existe....";
+		}
+	}
+	fclose (ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void M_Venta()
+{
+	FILE*ptr;
+	Venta X; 
+	int n;
+	char ene[10];
+	bool valene;   
+	do
+	{
+		cout << " Regisro A Modificar: ";
+		valene=false;
+		cin >> ene;
+		if(!NoEsNumeroInt(ene))
+		{
+			valene=true;
+			n=ConvertirCharToInt(ene);
+		}
+	}while(strlen(ene)==0 || !valene);
+	ptr=fopen("Venta.dat","r+");
+	if(ptr == NULL)
+	{
+		cout << "\n Archivo no existente ...";
+	}
+	else
+	{
+		fseek(ptr,(n-1)*sizeof(struct Venta),SEEK_SET);
+		fread(&X,sizeof(struct Venta),1,ptr);
+		if(!feof(ptr))
+		{
+			if(X.Estado == 'N')
+			{
+				cout << "\n Datos Actuales Son "; 
+				cout << "\n --> "<<X.IdVenta<<" | "<<X.IdCajero<<" | "<<X.IdCliente<<" | "<<X.IdProducto<<" | "<<X.Cantidad<<" | "<<X.PrecioUnit<<" | "<<X.Fecha;
+				cout << "\n Introducir Datos Nuevos \n";
+				char numero[10];
+				bool valnumero; 
+				do
+				{
+					valnumero=false;
+					cout<<" Id_Venta : "; 
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						if(existeventa(ConvertirCharToInt(numero)) && X.IdVenta!=ConvertirCharToInt(numero))
+						{
+							valnumero=false;
+						}
+						else
+						{
+							X.IdVenta=ConvertirCharToInt(numero); 	
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				do
+				{
+					valnumero=false;
+					cout<<" Id_Cajero : "; 
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						X.IdCajero=ConvertirCharToInt(numero);
+						if(!existecajero(X.IdCajero))
+						{
+							valnumero=false;
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				do
+				{
+					valnumero=false;
+					cout<<" Id_Cliente : "; 
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						X.IdCliente=ConvertirCharToInt(numero);
+						if(!existecliente(X.IdCliente))
+						{
+							valnumero=false;
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				do
+				{
+					valnumero=false;
+					cout<<" Id_Producto : "; 
+					cin>>numero;
+					if(!NoEsNumeroInt(numero))
+					{
+						valnumero=true;
+						X.IdProducto=ConvertirCharToInt(numero);
+						if(!existeproducto(X.IdProducto))
+						{
+							valnumero=false;
+						}
+					}
+				}while(strlen(numero)==0 || !valnumero);
+				char num[10];
+				do
+				{
+					valnumero=false;
+					cout<<" Cantidad : "; 
+					cin>>num;
+					if(!NoEsNumeroInt(num))
+					{
+						valnumero=true;
+						X.Cantidad=ConvertirCharToInt(num);
+					}
+				}while(strlen(num)==0 || !valnumero);
+				cout << " Precio Unitario : "; 
+				cin>>X.PrecioUnit;
+				do
+				{   
+					cout<<" Fecha : ";
+					do
+					{
+						gets(X.Fecha);
+					}while(strlen(X.Fecha)==0);
+				}while(strlen(X.Fecha)>10);
+				X.Estado='N';
+				fseek(ptr,(n-1)*sizeof(struct Venta),SEEK_SET);
+				fwrite(&X,sizeof(struct Venta),1,ptr);
+			}
+			else
+			{
+				cout << "\n El Registro Fue Eliminado ...";
+			}
+		}
+		else
+		{
+			cout << "\n El Registro No existe ...";
+		}
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+void C_Venta()
+{
+	FILE*ptr; 
+	int n=1;
+	Venta X;
+	ptr=fopen("Venta.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Venta),1,ptr);
+		cout << "\n  -------------------------------------------------------------------------- ";
+		cout << "\n | N | Id_Vta | Id_Cjro | Id_Clte | Id_Prod | Cant | P.Unit | Fecha | Estado";
+		cout << "\n  -------------------------------------------------------------------------- ";
+		while(!feof(ptr))
+		{
+			if(X.Estado=='N')
+			{
+				cout << "\n "<<n<<" | "<<X.IdVenta<<" | "<<X.IdCajero<<" | "<<X.IdCliente<<" | "<<X.IdProducto<<" | "<<X.Cantidad<<" | "<<X.PrecioUnit<<" | "<<X.Fecha;
+			} 
+			fread(&X,sizeof(struct Venta),1,ptr);
+			n++;
+		}
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+
+//Reporte de Ventas por Sucursal y Sucursal que mas vende 
+void ReporteVentaPorSucursal()
+{
+	int IdSucursalMayor;
+	char NombreMayor[15];
+	float monto1,monto2,monto3,monto4,monto5,monto6,monto7,montomayor;
+	monto1=0;
+	monto2=0;
+	monto3=0;
+	monto4=0;
+	monto5=0;
+	montomayor=0;
+	system("cls");
+	FILE * ptrA;
+	FILE * ptrB;
+	FILE * ptrC;
+	FILE * ptrD;
+	Sucursal A;
+	ptrA=fopen("Sucursal.dat", "r");
+	if(ptrA == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&A,sizeof(struct Sucursal),1,ptrA);
+		cout << "\n  ------------------------------ ";
+		cout << "\n | Id Sucursal | Nombre | Monto |";
+		cout << "\n  ------------------------------ ";
+		while(!feof(ptrA))
+		{  
+			if(A.Estado=='N')
+			{
+				Caja B;
+				ptrB=fopen("Caja.dat", "r");
+				if(ptrB == NULL)
+				{
+					cout << "\n El Archivo No Existe...";
+				}
+				else
+				{
+					fread(&B,sizeof(struct Caja),1,ptrB);
+					while(!feof(ptrB))
+					{ 
+						if(B.Estado=='N' && B.IdSucursal==A.IdSucursal)
+						{
+							Cajero C;					
+							ptrC=fopen("Cajero.dat", "r");
+							if(ptrC == NULL)
+							{
+								cout << "\n El Archivo No Existe...";
+							}
+							else
+							{
+								fread(&C,sizeof(struct Cajero),1,ptrC);
+								while(!feof(ptrC))
+								{  
+									if(C.Estado=='N' && C.IdCaja==B.IdCaja)
+									{
+										Venta D;
+										ptrD=fopen("Venta.dat", "r");
+										if(ptrD == NULL)
+										{
+											cout << "\n El Archivo No Existe...";
+										}
+										else
+										{
+											fread(&D,sizeof(struct Venta),1,ptrD);
+											while(!feof(ptrD))
+											{  
+												if(D.Estado=='N' && D.IdCajero==C.IdCajero)
+												{
+													monto1=monto1+(D.Cantidad*D.PrecioUnit);
+												}
+												fread(&D,sizeof(struct Venta),1,ptrD);
+											}
+										}
+										fclose(ptrD);
+										monto2=monto2+monto1;
+										monto1=0;
+									}
+									fread(&C,sizeof(struct Cajero),1,ptrC);
+								}
+							}
+							fclose(ptrC);
+							monto3=monto3+monto2;
+							monto6=monto3;
+							monto2=0;
+						}
+						fread(&B,sizeof(struct Caja),1,ptrB);
+					}
+				}
+				fclose(ptrB);
+				monto4=monto4+monto3;
+				monto7=monto6;
+				monto3=0;
+				if(monto7>montomayor)
+				{
+					IdSucursalMayor=A.IdSucursal;
+					strcpy(NombreMayor,A.Nombre);
+					montomayor=monto7;
+				}
+			}
+			cout << "\n | "<<A.IdSucursal<<" | "<<A.Nombre<<" | "<<monto7;
+			fread(&A,sizeof(struct Sucursal),1,ptrA);
+		}
+	}
+	fclose(ptrA);
+	monto5=monto5+monto4;
+	monto4=0;
+	cout << "\n ----------------------------------------- ";
+	cout << "\n El monto total es: "<<monto5;
+	cout << "\n ----------------------------------------- ";
+	cout << "\n";
+	cout << "\n     Sucursal que mas vende";
+	cout << "\n  ------------------------------ ";
+	cout << "\n | Id Sucursal | Nombre | Monto |";
+	cout << "\n  ------------------------------ ";
+	cout << "\n | "<<IdSucursalMayor<<" | "<<NombreMayor<<" | "<<montomayor;
+	cout << "\n";
+	system("pause");
+}
+
+//FormularioFecha
+bool mayorigual(char *FechaFin, char *fecha)
+{
+	char fin[9],fec[9];
+	int nfin,nfec;
+	bool cumple=false;
+	fin[0]=FechaFin[6];
+	fin[1]=FechaFin[7];
+	fin[2]=FechaFin[8];
+	fin[3]=FechaFin[9];
+	fin[4]=FechaFin[3];
+	fin[5]=FechaFin[4];
+	fin[6]=FechaFin[0];
+	fin[7]=FechaFin[1];
+	fin[8]='\0';
+	nfin=ConvertirCharToInt(fin);
+	
+	fec[0]=fecha[6];
+	fec[1]=fecha[7];
+	fec[2]=fecha[8];
+	fec[3]=fecha[9];
+	fec[4]=fecha[3];
+	fec[5]=fecha[4];
+	fec[6]=fecha[0];
+	fec[7]=fecha[1];
+	fec[8]='\0';
+	nfec=ConvertirCharToInt(fec);
+	
+	if(nfec<=nfin)
+	{
+		cumple=true;
+	}
+	return(cumple);
+}
+bool menorigual(char *FechaIni, char *fecha)
+{
+	char ini[9],fec[9];
+	int nini,nfec;
+	bool cumple=false;
+	ini[0]=FechaIni[6];
+	ini[1]=FechaIni[7];
+	ini[2]=FechaIni[8];
+	ini[3]=FechaIni[9];
+	ini[4]=FechaIni[3];
+	ini[5]=FechaIni[4];
+	ini[6]=FechaIni[0];
+	ini[7]=FechaIni[1];
+	ini[8]='\0';
+	nini=ConvertirCharToInt(ini);
+	
+	fec[0]=fecha[6];
+	fec[1]=fecha[7];
+	fec[2]=fecha[8];
+	fec[3]=fecha[9];
+	fec[4]=fecha[3];
+	fec[5]=fecha[4];
+	fec[6]=fecha[0];
+	fec[7]=fecha[1];
+	fec[8]='\0';
+	nfec=ConvertirCharToInt(fec);
+
+	if(nfec>=nini)
+	{
+		cumple=true;
+	}
+	return(cumple);
+}
+bool estaentrelasfechas(char *fecha,char *FechaIni, char*FechaFin)
+{
+	bool si=false;
+	if(menorigual(FechaIni,fecha) && mayorigual(FechaFin,fecha))
+	{
+		si=true;
+	}
+	return(si);
+}
+struct Cliente obtenerCliente(int IdCliente)
+{
+	FILE *ptr;
+	Cliente X;
+	ptr=fopen("Cliente.dat","r");
+	if(ptr==NULL)
+	{
+		cout<<"el archivo no existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Cliente),1,ptr);
+		while(!feof(ptr) && X.IdCliente!=IdCliente)
+		{
+			fread(&X,sizeof(struct Cliente),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return(X);
+}
+
+struct Producto obtenerProducto(int IdProducto)
+{
+	FILE *ptr;
+	Producto X;
+	ptr=fopen("Producto.dat","r");
+	if(ptr==NULL)
+	{
+		cout<<"el archivo no existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Producto),1,ptr);
+		while(!feof(ptr) && X.IdProducto!=IdProducto)
+		{
+			fread(&X,sizeof(struct Producto),1,ptr);
+		}
+	}
+	fclose(ptr);
+	return(X);
+}
+
+// Reporte Venta Por Fechas
+void ReporteVentaPorFechas()
+{
+	char FechaIni[11],FechaFin[11];
+	system("cls");
+	cout<<"\n Ingresar las fechas...";
+	cout<<"\n Fecha Inicio:";
+	do
+	{
+		gets(FechaIni);
+	}while(strlen(FechaIni)==0);
+	cout<<"\n Fecha Final:";
+	do
+	{
+		gets(FechaFin);
+	}while(strlen(FechaFin)==0);
+	FILE*ptr; 
+	int n=1;
+	float monto,total=0;
+	Venta X;
+	Cliente C;
+	Producto P;
+	ptr=fopen("Venta.dat", "r");
+	if(ptr == NULL)
+	{
+		cout << "\n El Archivo No Existe...";
+	}
+	else
+	{
+		fread(&X,sizeof(struct Venta),1,ptr);
+		cout << "\n  -----------------------------------";
+		cout << "\n | Reporte del "<<FechaIni<<" al "<<FechaFin<<" |";
+		cout << "\n  -----------------------------------";
+		cout << "\n";
+		cout << "\n  --------------------------------------------------------- ";
+		cout << "\n | N | Id_Venta | Clte | Prod | Cant | P.U | Monto | Fecha |";
+		cout << "\n  --------------------------------------------------------- ";
+		while(!feof(ptr))
+		{
+			if(X.Estado=='N' && estaentrelasfechas(X.Fecha,FechaIni,FechaFin))
+			{
+				monto=X.Cantidad*X.PrecioUnit;
+				total=total+monto;
+				C=obtenerCliente(X.IdCliente);
+				P=obtenerProducto(X.IdProducto);
+				cout << "\n "<<n<<" | "<<X.IdVenta<<" | "<<C.Nombre<<" | "<<P.Nombre<<" | "<<X.Cantidad<<" | "<<X.PrecioUnit<<" | "<<monto<<" | "<<X.Fecha;
+			}
+			fread(&X,sizeof(struct Venta),1,ptr);
+			n++;
+		}
+		cout << "\n";
+		cout << "\n  -------------------------------- ";
+		cout << "\n Total: "<<total;
+		cout << "\n  -------------------------------- ";
+	}
+	fclose(ptr);
+	cout <<"\n";  
+	system("pause");
+}
+
+// Sub Menus Archivos
+void Menu_Sucursal()
+{
+	int OP;
+	do
+	{
+		system("cls");
+		Menu_Secundario();
+		cin >> OP;
+		switch(OP)
+		{
+			case 1: A_Sucursal(); break;
+			case 2: B_Sucursal(); break;
+			case 3: M_Sucursal(); break;
+			case 4: C_Sucursal(); break;
+			case 5: OP=0; break;
+		}
+	}while(OP!=0);
+}
+void Menu_Caja()
+{
+	int OP;
+	do
+	{
+		system("cls");
+		Menu_Secundario();
+		cin >> OP;
+		switch(OP)
+		{
+			case 1: A_Caja(); break;
+			case 2: B_Caja(); break;
+			case 3: M_Caja(); break;
+			case 4: C_Caja(); break;
+			case 5: OP=0; break;
+		}
+	}while(OP!=0);
+}
+void Menu_Cajero()
+{
+	int OP;
+	do
+	{
+		system("cls");
+		Menu_Secundario();
+		cin >> OP;
+		switch(OP)
+		{
+			case 1: A_Cajero(); break;
+			case 2: B_Cajero(); break;
+			case 3: M_Cajero(); break;
+			case 4: C_Cajero(); break;
+			case 5: OP=0; break;
+		}
+	}while(OP!=0);
+}
+void Menu_Cliente()
+{
+	int OP;
+	do
+	{
+		system("cls");
+		Menu_Secundario();
+		cin >> OP;
+		switch(OP)
+		{
+			case 1: A_Cliente(); break;
+			case 2: B_Cliente(); break;
+			case 3: M_Cliente(); break;
+			case 4: C_Cliente(); break;
+			case 5: OP=0; break;
+		}
+	}while(OP!=0);
+}
+void Menu_Producto()
+{
+	int OP;
+	do
+	{
+		system("cls");
+		Menu_Secundario();
+		cin >> OP;
+		switch(OP)
+		{
+			case 1: A_Producto(); break;
+			case 2: B_Producto(); break;
+			case 3: M_Producto(); break;
+			case 4: C_Producto(); break;
+			case 5: OP=0; break;
+		}
+	}while(OP!=0);
+}
+void Menu_Ingreso()
+{
+	int OP;
+	do
+	{
+		system("cls");
+		Menu_Secundario();
+		cin >> OP;
+		switch(OP)
+		{
+			case 1: A_Ingreso(); break;
+			case 2: B_Ingreso(); break;
+			case 3: M_Ingreso(); break;
+			case 4: C_Ingreso(); break;
+			case 5: OP=0; break;
+		}
+	}while(OP!=0);
+}
+void Menu_Venta()
+{
+	int OP;
+	do
+	{
+		system("cls");
+		Menu_Secundario();
+		cin >> OP;
+		switch(OP)
+		{
+			case 1: A_Venta(); break;
+			case 2: B_Venta(); break;
+			case 3: M_Venta(); break;
+			case 4: C_Venta(); break;
+			case 5: OP=0; break;
+		}
+	}while(OP!=0);
+}
+// Programa de Creacion Archivos
+void Crear(char Nom[30])
+{
+	FILE*ptr;
+	ptr=fopen(Nom, "w");
+	cout<<"\n Archivo creado.... "<<Nom;
+	fclose(ptr);
+}
+void Crear_Archivos()
+{
+	int OP;
+	do
+	{
+		system("cls");
+		cout << "\n  --------------------------";
+		cout << "\n | Menu Crear Archivo       |";
+		cout << "\n  --------------------------";
+		cout << "\n | 1. Sucursal              |";
+		cout << "\n | 2. Caja                  |";
+		cout << "\n | 3. Cajero                |";
+		cout << "\n | 4. Cliente               |";
+		cout << "\n | 5. Producto              |";
+		cout << "\n | 6. Ingreso               |";
+		cout << "\n | 7. Venta                 |";
+		cout << "\n | 8. Salir                 |";
+		cout << "\n  -------------------------- ";
+		cout << "\n ** Elija Una Opcion: ";
+		cin >> OP;
+		switch(OP)
+		{
+			case 1: Crear("Sucursal.dat"); break;
+			case 2: Crear("Caja.dat"); break;
+			case 3: Crear("Cajero.dat"); break;
+			case 4: Crear("Cliente.dat"); break;
+			case 5: Crear("Producto.dat"); break;
+			case 6: Crear("Ingreso.dat"); break;
+			case 7: Crear("Venta.dat"); break;
+			case 8: OP=0; break;
+		}
+		cout <<"\n"; 
+		system("pause");
+	}while(OP!=0);
+}
+// Menu Principal
+void main()
+{
+	int OP;  
+	do
+	{
+		system("cls");
+		Menu_Principal();
+		cin >> OP;
+		switch(OP)
+		{
+			case 1: Menu_Sucursal(); break;
+			case 2: Menu_Caja(); break;
+			case 3: Menu_Cajero(); break;
+			case 4: Menu_Cliente(); break;
+			case 5: Menu_Producto(); break;
+			case 6: Menu_Ingreso(); break;
+			case 7: Menu_Venta(); break;
+			case 8: Crear_Archivos(); break;
+			case 9: ReporteVentaPorFechas(); break;
+			case 10: ReporteVentaPorSucursal(); break;
+			case 11: OP=0; break;
+		}
+	}while(OP!=0);
+}
